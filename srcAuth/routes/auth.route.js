@@ -4,13 +4,16 @@ import {
   register,
   infoUser,
   changeOwnPass,
+  changeRole,
 } from "../controllers/auth.controller.js";
 import {
   bodyRegisterValidator,
   bodyLoginValidator,
   bodyChangePassValidator,
+  bodyChangeRoleValidator,
 } from "../../middlewares/validatorManager.js";
 import { requireToken } from "../../middlewares/requireToken.js";
+import { changeRoles } from "../../middlewares/changeRoles.js";
 
 const router = express.Router();
 
@@ -22,6 +25,7 @@ router.patch(
   bodyChangePassValidator,
   changeOwnPass
 );
-router.get("/unserinfo", requireToken, infoUser);
+router.get("/userinfo", requireToken, infoUser);
+router.post("/changeRole", requireToken, changeRoles, changeRole);
 
 export default router;

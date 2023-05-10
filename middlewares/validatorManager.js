@@ -12,13 +12,15 @@ export const bodyRegisterValidator = [
     }
     return value;
   }),
-  body("role", "Doesn't have authorization").custom((value, { req }) => {
-    if (!roles.includes(value)) throw new Error("Role doesn't exist");
+  body("role", "Doesn't have authorization")
+    .trim()
+    .custom((value, { req }) => {
+      if (!roles.includes(value)) throw new Error("Role doesn't exist");
 
-    if (req.urole != "admin") throw new Error("Doesn't have authorization");
+      if (req.urole != "admin") throw new Error("Doesn't have authorization");
 
-    return value;
-  }),
+      return value;
+    }),
   validatorResExpress,
 ];
 
@@ -40,6 +42,22 @@ export const bodyLoginValidator = [
 
 export const paramNoteValidator = [
   param("id", "invalid format").trim().notEmpty().escape(),
+  validatorResExpress,
+];
+export const bodyChangeRoleValidator = [
+  body("emailUserToChange", "Email format wrong")
+    .trim()
+    .isEmail()
+    .normalizeEmail(),
+  body("roleToChange", "Authorization problem")
+    .trim()
+    .custom((value, { req }) => {
+      if (!roles.includes(value)) throw new Error("Role doesn't exist");
+
+      if (req.urole != "admin") throw new Error("Doesn't have authorization");
+
+      return value;
+    }),
   validatorResExpress,
 ];
 

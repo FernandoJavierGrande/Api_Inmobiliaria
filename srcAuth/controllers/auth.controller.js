@@ -81,3 +81,21 @@ export const changeOwnPass = async (req, res) => {
     return res.status(500).json({ error: "Server error" });
   }
 };
+export const changeRole = async (req, res) => {
+  try {
+    const { emailUserToChange, roleToChange } = req;
+
+    if (roleToChange == "admin") return res.status(200).json("Changed");
+
+    const user = await User.findOne(emailUserToChange);
+
+    if (!user) return res.status(404).json("Error");
+    user.role = "admin";
+
+    await user.save();
+
+    return res.status(200).json("Changed");
+  } catch (error) {
+    return res.status(500).json({ erros: "Server error, try again later" });
+  }
+};
