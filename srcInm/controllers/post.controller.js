@@ -1,77 +1,32 @@
+import { User } from "../../srcAuth/models/User.js";
+import { postToDto } from "../../utils/postDTO.js";
 import { Image } from "../models/image.js";
 import { Post } from "../models/post.js";
-import multer from "multer";
 
 export const NewPost = async (req, res) => {
   try {
-    const userEmail = "fernando1@gmail.com";
+    const user = await User.findById(req.uid);
 
-    const {
-      title,
-      type,
-      description,
-      operationType,
-      city,
-      zone,
-      condition,
-      bath,
-      rooms,
-      area,
-    } = req.body;
+    if (!user) throw new Error("authorization error");
 
-    let post = new Post({
-      title,
-      type,
-      description,
-      operationType,
-      city,
-      zone,
-      condition,
-      bath,
-      rooms,
-      area,
-    });
-    post.userEmail = userEmail;
-    post.status = true;
+    if (user.role != req.urole) throw new Error("authorization error");
 
-    post = await post.save();
+    req.post.userEmail = user.email;
+    req.post.status = true;
 
-    req.postId = post.id;
+    let post = await req.post.save();
 
-    res.status(201).json({ reqpostId: `${req.postId}`, pId: `${post.id}` });
+    res.status(201).json({ reqpostId: `${post.id}` });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
-//#region storage
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads");
-  },
-  filename: (req, file, cb) => {
-    // console.log(file);
-    cb(null, `${Date.now()}-${file.originalname}`);
-  },
-});
-const up = multer({ storage });
-//#endregion
-export const upload = up.single("image");
 
 export const uploadFile = async (req, res) => {
   try {
     const { id } = req.params;
 
-    //doit in a middleware
-    let image = new Image();
-    image.title = req.body.title;
-    image.description = req.body.description;
-    image.filename = req.file.filename;
-    image.path = "/img/uploads/" + req.file.filename;
-    image.originalname = req.file.originalname;
-    image.mimetype = req.file.mimetype;
-    image.size = req.file.size;
-
-    let imagen = new Image();
+    let image = req.Image;
 
     image = await image.save();
 
@@ -81,11 +36,49 @@ export const uploadFile = async (req, res) => {
 
     await post.save();
 
-    return res.status(201).json(post);
+    let postDto = postToDto(post);
+
+    return res.status(201).json(postDto);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+export const getAllPosts = async (req, res) => {
+  try {
+    const posts = await Post.find();
+
+    if (posts) {
+      let postDto = new Array();
+      posts.forEach((post) => {
+        postDto.push(postToDto(post));
+      });
+
+      return res.json(postDto);
+    } else {
+      return res.status(204);
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+export const getPostById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const post = await Post.findById(id);
+
+    if (post) {
+      let postDto = postToDto(post);
+
+      return res.json(postDto);
+    } else {
+      return res.status(404).json(`Publication id: ${id} doesn't exist`);
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 export const deleteImg = async (req, res) => {
   try {
     const { id } = req.params;

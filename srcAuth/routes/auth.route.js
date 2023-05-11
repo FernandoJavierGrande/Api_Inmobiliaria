@@ -13,7 +13,6 @@ import {
   bodyChangeRoleValidator,
 } from "../../middlewares/validatorManager.js";
 import { requireToken } from "../../middlewares/requireToken.js";
-import { changeRoles } from "../../middlewares/changeRoles.js";
 
 const router = express.Router();
 
@@ -26,6 +25,6 @@ router.patch(
   changeOwnPass
 );
 router.get("/userinfo", requireToken, infoUser);
-router.post("/changeRole", requireToken, changeRoles, changeRole);
+router.post("/changeRole", requireToken, bodyChangeRoleValidator, changeRole);
 
 export default router;

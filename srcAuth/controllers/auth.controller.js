@@ -83,19 +83,22 @@ export const changeOwnPass = async (req, res) => {
 };
 export const changeRole = async (req, res) => {
   try {
-    const { emailUserToChange, roleToChange } = req;
+    const { emailUserToChange, roleToChange } = req.body;
 
-    if (roleToChange == "admin") return res.status(200).json("Changed");
+    // if (roleToChange == "admin") return res.status(200).json("Changed");
 
-    const user = await User.findOne(emailUserToChange);
+    let user = await User.findOne({ email: emailUserToChange });
 
     if (!user) return res.status(404).json("Error");
-    user.role = "admin";
+    user.role = roleToChange;
 
     await user.save();
 
     return res.status(200).json("Changed");
   } catch (error) {
-    return res.status(500).json({ erros: "Server error, try again later" });
+    console.log(error);
+    return res
+      .status(500)
+      .json({ error: "Server error, try again later " + error.message });
   }
 };

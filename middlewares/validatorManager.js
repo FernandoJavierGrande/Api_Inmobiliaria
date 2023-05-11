@@ -1,5 +1,6 @@
 import { body, param } from "express-validator";
 import { validatorResExpress } from "./validatorResExpress.js";
+import { roles } from "../utils/roles.js";
 
 export const bodyRegisterValidator = [
   body("email", "Email format incorrect").trim().isEmail().normalizeEmail(),
@@ -54,11 +55,9 @@ export const bodyChangeRoleValidator = [
     .custom((value, { req }) => {
       if (!roles.includes(value)) throw new Error("Role doesn't exist");
 
-      if (req.urole != "admin") throw new Error("Doesn't have authorization");
+      if (req.urole != roles[0]) throw new Error("Doesn't have authorization");
 
       return value;
     }),
   validatorResExpress,
 ];
-
-const roles = ["admin", "vendedor"];
