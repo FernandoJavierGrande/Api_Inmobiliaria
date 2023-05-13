@@ -13,11 +13,13 @@ import {
   bodyChangeRoleValidator,
 } from "../../middlewares/validatorManager.js";
 import { requireToken } from "../../middlewares/requireToken.js";
+import validatorBody from "../../middlewares/validatorBody.js";
+import { DtoChangeRole, DtoLogin } from "../../middlewares/addDTOs.js";
 
 const router = express.Router();
 
 router.post("/register", requireToken, bodyRegisterValidator, register); // validar que esté logueado un user by token
-router.post("/login", bodyLoginValidator, login);
+router.post("/login", DtoLogin, validatorBody, bodyLoginValidator, login);
 router.patch(
   "/changepass",
   requireToken,
@@ -25,6 +27,13 @@ router.patch(
   changeOwnPass
 );
 router.get("/userinfo", requireToken, infoUser);
-router.post("/changeRole", requireToken, bodyChangeRoleValidator, changeRole);
+router.post(
+  "/changeRole",
+  requireToken,
+  DtoChangeRole,
+  validatorBody,
+  bodyChangeRoleValidator,
+  changeRole
+);
 
 export default router;

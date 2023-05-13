@@ -1,6 +1,7 @@
 import express from "express";
 import {
   NewPost,
+  deleteImg,
   getAllPosts,
   getPostById,
   uploadFile,
@@ -16,5 +17,6 @@ router.post("/new", requireToken, normalizePost, NewPost);
 router.post("/upload/:id", upload, imageUpload, uploadFile);
 router.get("/", validatorResExpress, getAllPosts);
 router.get("/:id", validatorResExpress, getPostById);
+router.delete("/image/:id", deleteImg);
 
 export default router;

@@ -1,3 +1,4 @@
+import fs from "fs";
 import { User } from "../../srcAuth/models/User.js";
 import { postToDto } from "../../utils/postDTO.js";
 import { Image } from "../models/image.js";
@@ -28,11 +29,15 @@ export const uploadFile = async (req, res) => {
 
     let image = req.Image;
 
-    image = await image.save();
-
     let post = await Post.findById(id);
 
-    post.images.push(image.path);
+    if (!post) {
+      return res.status(404).json("invalid Request");
+    }
+
+    image = await image.save();
+
+    post.images.push({ id: image.id, path: image.path });
 
     await post.save();
 
@@ -40,6 +45,7 @@ export const uploadFile = async (req, res) => {
 
     return res.status(201).json(postDto);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -78,14 +84,29 @@ export const getPostById = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
+const dirname =
+  "C:\\Users\\ferna\\Desktop\\Cursos\\JS\\inmobiliaria\\uploads\\";
 export const deleteImg = async (req, res) => {
   try {
     const { id } = req.params;
-    const imageDeleted = await Image.findByIdAndDelete(id);
-    //eliminar la imagen
-    // await unlink(path.resolve('./src/public' + imageDeleted.path));
-    res.status(200).json("Deleted");
+    const { idImage } = req.body;
+
+    let post = await Post.findById(id);
+    const index = post.images.indexOf(idImage);
+    post.images.splice(index, 1);
+
+    await post.save();
+
+    const image = await Image.findById(idImage);
+
+    await Image.findByIdAndDelete(image.id);
+
+    fs.unlink(dirname + image.filename, (err) => {
+      if (err) {
+        throw new Error("Could not delete the file. " + err);
+      }
+      return res.status(200).json("Deleted");
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

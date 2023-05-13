@@ -52,9 +52,16 @@ const postSchema = new Schema({
     type: Boolean,
     required: true,
   },
-  images: {
-    type: [String],
-  },
+  images: [
+    new Schema(
+      {
+        id: String,
+        path: String,
+      },
+      { _id: false }
+    ),
+  ],
+
   created_at: {
     type: Date,
     default: Date.now(),

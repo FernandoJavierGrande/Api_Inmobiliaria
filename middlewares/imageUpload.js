@@ -1,3 +1,4 @@
+import { body } from "express-validator";
 import { Image } from "../srcInm/models/image.js";
 import multer from "multer";
 

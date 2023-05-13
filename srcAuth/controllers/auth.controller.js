@@ -1,6 +1,5 @@
 import { generateToken } from "../../utils/tokenManager.js";
 import { User } from "../models/User.js";
-import Jwt from "jsonwebtoken";
 
 export const register = async (req, res) => {
   try {
@@ -14,8 +13,9 @@ export const register = async (req, res) => {
 
     let user = await User.findOne({ email }); //buscar si existe cuando se pase por param, validar con token?
 
-    if (user) throw new Error("this Email already exists");
-
+    if (user) {
+      throw new Error("this Email already exists");
+    }
     user = new User({ email, password, role });
     user.registerBy = userAdmin.email;
 
@@ -61,16 +61,15 @@ export const changeOwnPass = async (req, res) => {
   try {
     const id = req.uid;
     const { password, newpassword } = req.body;
-    // const {newpassword} = req.body.password;
 
     const user = await User.findById(id);
 
     if (!user) return res.status(404).json({ error: "user or pass wrong" });
 
     const respuestaPassword = await user.comparePassword(password);
-    if (!respuestaPassword)
+    if (!respuestaPassword) {
       return res.status(403).json({ error: "user or pass wrong" });
-
+    }
     user.password = newpassword;
 
     await user.save();
@@ -85,11 +84,11 @@ export const changeRole = async (req, res) => {
   try {
     const { emailUserToChange, roleToChange } = req.body;
 
-    // if (roleToChange == "admin") return res.status(200).json("Changed");
-
     let user = await User.findOne({ email: emailUserToChange });
 
-    if (!user) return res.status(404).json("Error");
+    if (!user) {
+      return res.status(404).json("Error");
+    }
     user.role = roleToChange;
 
     await user.save();

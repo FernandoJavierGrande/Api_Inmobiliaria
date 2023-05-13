@@ -1,9 +1,4 @@
-import { Post } from "../srcInm/models/post.js";
-import mongoose from "mongoose";
-
-const { Schema, model } = mongoose;
-
-const postDtoSchema = new Schema({
+const postDtoSchema = {
   title: {
     type: String,
     required: true,
@@ -45,19 +40,21 @@ const postDtoSchema = new Schema({
     type: Number,
     required: true,
   },
-  images: {
-    type: [String],
-  },
+  images: [
+    {
+      id: String,
+      path: String,
+    },
+    { _id: false },
+  ],
   created_at: {
     type: Date,
     default: Date.now(),
   },
-});
-
-const PostDto = model("PostDto", postDtoSchema);
+};
 
 export const postToDto = (post) => {
-  let postDto = new PostDto();
+  let postDto = postDtoSchema;
 
   postDto._id = post._id;
   postDto.title = post.title;
