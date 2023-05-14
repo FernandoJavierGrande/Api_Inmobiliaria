@@ -76,7 +76,6 @@ export const changeOwnPass = async (req, res) => {
 
     return res.status(202).json(user);
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ error: "Server error" });
   }
 };

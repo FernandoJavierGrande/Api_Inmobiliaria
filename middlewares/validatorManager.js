@@ -25,7 +25,7 @@ export const bodyRegisterValidator = [
   validatorResExpress,
 ];
 
-export const bodyChangePassValidator = [
+export const bodyChPassValid = [
   body("password", "Password must be at least 8 characters")
     .trim()
     .isLength({ min: 8 }),
@@ -41,11 +41,11 @@ export const bodyLoginValidator = [
   validatorResExpress,
 ];
 
-export const paramNoteValidator = [
+export const paramValidator = [
   param("id", "invalid format").trim().notEmpty().escape(),
   validatorResExpress,
 ];
-export const bodyChangeRoleValidator = [
+export const bodyChRoleValid = [
   body("emailUserToChange", "Email format wrong")
     .trim()
     .isEmail()

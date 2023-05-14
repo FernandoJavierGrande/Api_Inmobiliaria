@@ -1,7 +1,8 @@
 import { Post } from "../srcInm/models/post.js";
 import { roles } from "../utils/roles.js";
 
-export const normalizePost = (req, res, next) => {
+//builds a new obj in req called req.post. grouping all attributes on one property type post
+export const addPostToReq = (req, res, next) => {
   try {
     if (!roles.includes(req.urole)) throw new Error("Unauthorized");
 

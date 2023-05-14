@@ -1,16 +1,21 @@
+import { DtoSelector } from "../utils/DtoSelector.js";
+
 const validatorBody = (req, res, next) => {
   try {
+    const isValid = DtoSelector(req);
+    if (!isValid) {
+      throw new Error("Endpoint falied");
+    }
     const { Dto } = req;
-    const loginBody = req.body;
+
+    const ReqBody = req.body;
     const propsDto = Object.keys(Dto.properties);
 
-    console.log(loginBody);
-
-    if (typeof loginBody !== Dto.type) {
+    if (typeof ReqBody !== Dto.type) {
       return res.status(400).json("Body request must be in json format");
     }
 
-    const bodyPropsNames = Object.keys(loginBody);
+    const bodyPropsNames = Object.keys(ReqBody);
 
     const checkProps =
       bodyPropsNames.length === propsDto.length &&

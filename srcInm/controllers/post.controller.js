@@ -1,6 +1,6 @@
 import fs from "fs";
 import { User } from "../../srcAuth/models/User.js";
-import { postToDto } from "../../utils/postDTO.js";
+import { postToDto } from "../../utils/postToDTO.js";
 import { Image } from "../models/image.js";
 import { Post } from "../models/post.js";
 
@@ -45,10 +45,10 @@ export const uploadFile = async (req, res) => {
 
     return res.status(201).json(postDto);
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
+
 export const getAllPosts = async (req, res) => {
   try {
     const posts = await Post.find();
