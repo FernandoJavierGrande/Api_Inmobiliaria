@@ -17,4 +17,5 @@ export const tokenVerificationErrors = {
   "invalid token": "Token no válido",
   "No token": "Sin autorizacion. Utiliza formato Bearer",
   "jwt malformed": "JWT formato no válido",
+  forbbiden: "sin autorizacion",
 };

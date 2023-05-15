@@ -29,7 +29,70 @@ export const registerDto = {
     role: String,
   },
 };
-export const postDtoSchema = {
+
+export const postDto = {
+  type: "object",
+  properties: {
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    type: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    operationType: {
+      type: String,
+      required: true,
+    },
+    city: {
+      type: String,
+      required: true,
+    },
+    zone: {
+      type: String,
+      required: true,
+    },
+    condition: {
+      type: String,
+      required: true,
+    },
+    bath: {
+      type: Number,
+      required: true,
+    },
+    rooms: {
+      type: Number,
+      required: true,
+    },
+    area: {
+      type: Number,
+      required: true,
+    },
+    images: [
+      {
+        id: String,
+        path: String,
+      },
+      { _id: false },
+    ],
+    created_at: {
+      type: Date,
+      default: Date.now(),
+    },
+  },
+};
+export const postDtoUpdate = {
+  _id: {
+    type: String,
+    required: true,
+    trim: true,
+  },
   title: {
     type: String,
     required: true,
@@ -80,6 +143,10 @@ export const postDtoSchema = {
   ],
   created_at: {
     type: Date,
-    default: Date.now(),
+    default: Date,
+  },
+  status: {
+    type: Boolean,
+    required: true,
   },
 };

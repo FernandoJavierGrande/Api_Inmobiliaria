@@ -3,6 +3,9 @@ import { User } from "../../srcAuth/models/User.js";
 import { postToDto } from "../../utils/postToDTO.js";
 import { Image } from "../models/image.js";
 import { Post } from "../models/post.js";
+// import { PostDto } from "../../utils/PostToDtoPost.js";
+import { Console } from "console";
+import { postDto } from "../../Dtos/DTOModels.js";
 
 export const NewPost = async (req, res) => {
   try {
@@ -10,7 +13,7 @@ export const NewPost = async (req, res) => {
 
     if (!user) throw new Error("authorization error");
 
-    if (user.role != req.urole) throw new Error("authorization error");
+    if (user.role !== req.urole) throw new Error("authorization error");
 
     req.post.userEmail = user.email;
     req.post.status = true;
@@ -22,7 +25,33 @@ export const NewPost = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+export const updatePost = async (req, res) => {
+  try {
+    const { uid } = req.uid;
 
+    const user = await User.findById(uid);
+
+    req.post.userEmail = user.email;
+    req.post.status = true;
+
+    let postDB = Post.findById(req.post.id);
+
+    if (!postDB) {
+      return res.status(404).json("Post doesn't exist");
+    }
+
+    postDB = req.post;
+
+    let post = await postDB.save();
+
+    res.status(201).json({ reqpostId: `${post.id}` });
+
+    if (!user) throw new Error("authorization error");
+  } catch (error) {
+    console.log(error);
+    return res.status(500);
+  }
+};
 export const uploadFile = async (req, res) => {
   try {
     const { id } = req.params;
@@ -54,17 +83,13 @@ export const getAllPosts = async (req, res) => {
     const posts = await Post.find();
 
     if (posts) {
-      let postDto = new Array();
-      posts.forEach((post) => {
-        postDto.push(postToDto(post));
-      });
-
-      return res.json(postDto);
+      return res.json(posts);
     } else {
       return res.status(204);
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.log(error);
+    return res.status(500).json({ error: error.message });
   }
 };
 export const getPostById = async (req, res) => {
@@ -74,9 +99,9 @@ export const getPostById = async (req, res) => {
     const post = await Post.findById(id);
 
     if (post) {
-      let postDto = postToDto(post);
+      // let postDto = postToDto(post);
 
-      return res.json(postDto);
+      return res.json(post);
     } else {
       return res.status(404).json(`Publication id: ${id} doesn't exist`);
     }

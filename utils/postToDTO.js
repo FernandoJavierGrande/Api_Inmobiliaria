@@ -1,12 +1,12 @@
-import { postDtoSchema } from "../Dtos/DTOModels.js";
+import { postDto } from "../Dtos/DTOModels.js";
 
 // progar generico
 export const postToDto = (post) => {
-  let postDto = postDtoSchema;
+  let publicationDto = postDto;
 
-  for (const key in postDto) {
-    postDto[key] = post[key];
+  for (const key in publicationDto) {
+    publicationDto[key] = post[key];
   }
 
-  return postDto;
+  return publicationDto;
 };

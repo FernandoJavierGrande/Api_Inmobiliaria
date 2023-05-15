@@ -6,8 +6,9 @@ const validatorBody = (req, res, next) => {
     if (!isValid) {
       throw new Error("Endpoint falied");
     }
-    const { Dto } = req;
 
+    const { Dto } = req;
+    console.log(Dto);
     const ReqBody = req.body;
     const propsDto = Object.keys(Dto.properties);
 
@@ -22,10 +23,12 @@ const validatorBody = (req, res, next) => {
       bodyPropsNames.every((bodyPropsName) => propsDto.includes(bodyPropsName));
 
     if (!checkProps) {
+      console.log(bodyPropsNames.length, propsDto.length);
       return res.status(400).json("Body properties are invalid");
     }
     next();
   } catch (error) {
+    console.log(error);
     return res.status(500).json("Server error, try again later");
   }
 };

@@ -1,9 +1,10 @@
 import {
   loginDtoModel,
-  postDtoSchema,
+  postDto,
   changeRoleDtoModel,
   changePassDto,
   registerDto,
+  postDtoUpdate,
 } from "../Dtos/DTOModels.js";
 
 const Dtos = {
@@ -11,6 +12,8 @@ const Dtos = {
   changeRole: changeRoleDtoModel,
   changeRole: changePassDto,
   register: registerDto,
+  newPost: postDto,
+  updatePost: postDtoUpdate,
 };
 
 export const DtoSelector = (req) => {

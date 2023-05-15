@@ -7,6 +7,8 @@ export const addPostToReq = (req, res, next) => {
     if (!roles.includes(req.urole)) throw new Error("Unauthorized");
 
     const {
+      id,
+      status,
       title,
       type,
       description,
@@ -20,6 +22,8 @@ export const addPostToReq = (req, res, next) => {
     } = req.body;
 
     let post = new Post({
+      id,
+      status,
       title,
       type,
       description,
@@ -32,6 +36,7 @@ export const addPostToReq = (req, res, next) => {
       area,
     });
     req.post = post;
+    console.log("add post " + req.post);
     next();
   } catch (error) {
     return res.status(400).json({ error: error.message });
